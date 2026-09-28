@@ -18,6 +18,13 @@ def create_student(student: Student):
 
     global next_id
 
+    for existing_student in students:
+        if existing_student["email"] == student.email:
+            raise HTTPException(
+                status_code=400,
+                detail="Student already exists"
+            )
+
     new_student = {
         "id": next_id,
         "name": student.name,
@@ -57,6 +64,18 @@ def update_student(student_id: int, student: Student):
 
         if existing_student["id"] == student_id:
 
+            for other_student in students:
+
+                if (
+                    other_student["email"] == student.email
+                    and other_student["id"] != student_id
+                ):
+                    raise HTTPException(
+                        status_code=400,
+                        detail="Email already exists"
+                    )
+
+            # Update student
             existing_student["name"] = student.name
             existing_student["email"] = student.email
             existing_student["course"] = student.course
