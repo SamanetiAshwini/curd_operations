@@ -44,6 +44,18 @@ def get_students():
 
     return students
 
+@app.get("/students/search")
+def search_students(course: str):
+
+    results = []
+
+    for student in students:
+
+        if course.lower() in student["course"].lower():
+            results.append(student)
+
+    return results
+
 @app.get("/students/{student_id}")
 def get_student(student_id: int):
 
@@ -104,16 +116,4 @@ def delete_student(student_id: int):
     raise HTTPException(
         status_code=404,
         detail="Student not found"
-    )
-
-@app.get("/students/search")
-def search_students(course: str):
-
-    results = []
-
-    for student in students:
-
-        if course.lower() in student["course"].lower():
-            results.append(student)
-
-    return results
+    )
